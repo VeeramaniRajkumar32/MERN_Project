@@ -3,8 +3,8 @@ const { generateJwtToken } = require('../middleware/jwtToken')
 const bcrypt = require("bcryptjs");
 
 const register = async (req, res) => {
-    const { name, userName, password, confirmPassword } = req.body;
-    if (!name || !userName || !password || !confirmPassword) {
+    const { name, userName, password } = req.body;
+    if (!name || !userName || !password ) {
         let msg = "Pls enter the all fields";
         res.status(400).json({ message: msg, status: "fail" });
     }else{
@@ -19,7 +19,7 @@ const register = async (req, res) => {
                 status: "fail",
                 });
             } else {
-                if (password === confirmPassword) {
+                // if (password === confirmPassword) {
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(password, salt);
                   const token = generateJwtToken({ username: userName });
@@ -31,13 +31,13 @@ const register = async (req, res) => {
                     status: "success",
                     });
                 }
-                } else {
-                let msg = "Miss Matched Password";
-                return res.status(400).json({
-                    message: msg,
-                    status: "fail",
-                });
-                }
+                // } else {
+                // let msg = "Miss Matched Password";
+                // return res.status(400).json({
+                //     message: msg,
+                //     status: "fail",
+                // });
+                // }
             }
             });
         });
@@ -45,10 +45,10 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { username, password } = req.body;
+  const { userName, password } = req.body;
   try {
     await conn.connect(async (err) => {
-  	let sql = `SELECT * FROM login WHERE email='${username}'`
+  	let sql = `SELECT * FROM login WHERE email='${userName}'`
   	await conn.query(sql, async (err,result) =>{
   	  if (err) throw err;
   	  if(!result.length){
@@ -71,15 +71,15 @@ const login = async (req, res) => {
               status: "fail",
             });
   		}else{
-  			const token = generateJwtToken({ username: username })
+  			const token = generateJwtToken({ username: userName })
   			// console.log(token);
   			// console.log(process.env.oneDay);
   			if(token){
-                return res.status(200).json({
-                      token: token,
-                      message: "ok",
-                      status: "success",
-                    });
+            return res.status(200).json({
+                  token: token,
+                  message: "ok",
+                  status: "success",
+                });
   			}
   		}
   	  }
