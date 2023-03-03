@@ -13,9 +13,10 @@ const verifyToken = (req, res, next) => {
 				console.log("A token is required for authentication");
 				return res.status(403).send("A token is required for authentication");
 			}
-			const decoded = jwt.verify(token, process.env.JWT_SECRET);
-			req.user = decoded;
-			// console.log(req.user.username);
+			
+			req.user = jwt.verify(token, process.env.JWT_SECRET);
+			// console.log(req.user);
+			 
 		} catch (err) {
 			return res.status(401).send("Not Authorize");
 		}

@@ -14,8 +14,8 @@ const getCategory = async (req, res) => {
           res
             .status(404)
             .json({ 
-				message: "No found category",
-				 status: "fail" 
+				  message: "No found category",
+				  status: "fail" 
 				});
         }
       });
